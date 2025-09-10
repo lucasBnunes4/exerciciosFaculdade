@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef int tno;
-
-typedef struct tnoe {
-    int chave;
-    struct tnoe *esq;
-    struct tnoe *dir;
-} tnoe;
+#include "arvore.h"
 
 tnoe * cria_no (tno chave) {
     tnoe *no;
@@ -94,19 +85,60 @@ int altura (tnoe * raiz) {
     }
 }
 
-int main (void) {
-    tnoe *arvore;
-
-
-    cria_vazia(&arvore);
-
+int remover (tnoe * raiz, tnoe ** nodo, tno chave) {
+    tnoe *aux, *ant, *fe, *fe_ant;
+    aux = *nodo;
     
+    if (aux == NULL)
+        return 0; // arvore vazia
+    
+    else if (chave < aux->chave)
+        remover(raiz, &(aux->esq), chave);
 
+    else if (chave > aux->chave)
+        remover(raiz, &(aux->dir), chave);
+    
+    else if (chave == aux->chave)
+    {
+        busca_ant(raiz, &ant, chave);
 
-    printf("Arvore\n");
-    percorrer(arvore);
+        if (ant == NULL)
+        {
+            if ((aux->esq == NULL) && (aux->dir == NULL)) *nodo = NULL;
+            else if (aux->dir != NULL)
+            {
+                fe = busca_folha_esq(aux->dir);
+                
+                if (aux->dir != fe)
+                {
+                    busca_ant(raiz, &fe_ant, fe->chave);
+                    fe_ant->esq = fe->dir;
+                    fe->dir = aux->dir;
+                }
 
-    printf("\nAltura: %d\n", altura(arvore));
+                fe->esq = aux->esq;
+                *nodo = fe;
+                
+            } else if (aux->esq != NULL)
+            {
+                *nodo = aux->esq;
+            }
+            
+            
+        }
+        
+    }
+    
+}
 
-    return 0;
+int busca_ant (tnoe *raiz, tnoe **pant, tno chave) {
+
+}
+
+tnoe * busca_folha_esq(tnoe *sub) {
+
+}
+
+tnoe * busca_folha_dir(tnoe *sub) {
+    
 }
